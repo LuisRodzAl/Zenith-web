@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Zenith - Frontend Next.js
 
-## Getting Started
+Versión mejorada del frontend de Zenith usando Next.js 15, optimizada para Vercel.
 
-First, run the development server:
+## 🚀 Características
+
+- **Next.js 15** con App Router
+- **TypeScript** para type safety
+- **Tailwind CSS** para estilos modernos
+- **Firebase Authentication** integrado
+- **Diseño mejorado** inspirado en Material Design
+- **Optimizado para Vercel** con SSR y SSG
+- **Responsive** para móviles y desktop
+
+## 📦 Instalación
+
+```bash
+npm install
+```
+
+## 🔧 Configuración
+
+El archivo `.env.local` ya está configurado con las credenciales de Firebase.
+
+## 🏃 Desarrollo
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La aplicación estará disponible en `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌐 Deploy en Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Opción 1: Desde la CLI
 
-## Learn More
+```bash
+npm install -g vercel
+vercel
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Opción 2: Desde GitHub
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Sube el proyecto a GitHub
+2. Ve a [vercel.com](https://vercel.com)
+3. Importa tu repositorio
+4. Configura las variables de entorno:
+   - `NEXT_PUBLIC_API_URL`
+   - `NEXT_PUBLIC_FIREBASE_API_KEY`
+   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+   - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+   - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+   - `NEXT_PUBLIC_FIREBASE_APP_ID`
+5. Deploy!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 Estructura
 
-## Deploy on Vercel
+```
+frontend-nextjs/
+├── app/
+│   ├── login/          # Página de login
+│   ├── home/           # Dashboard principal
+│   ├── chat/           # Chat con IA
+│   ├── diary/          # Diario emocional
+│   ├── calendar/       # Calendario de emociones
+│   ├── meditation/     # Ejercicios de meditación
+│   ├── psychologists/  # Directorio de psicólogos
+│   ├── tips/           # Consejos motivacionales
+│   ├── layout.tsx      # Layout principal
+│   └── page.tsx        # Página de inicio
+├── lib/
+│   ├── firebase.ts     # Configuración de Firebase
+│   └── api.ts          # Cliente API
+└── .env.local          # Variables de entorno
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎨 Mejoras vs React
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Mejor SEO** - Server-side rendering
+2. **Carga más rápida** - Optimización automática
+3. **Mejor UX** - Transiciones suaves
+4. **Diseño mejorado** - Inspirado en Material Design
+5. **TypeScript** - Menos errores en producción
+6. **Tailwind CSS** - Estilos más mantenibles
+
+## 🔗 Backend
+
+El backend Flask debe estar corriendo en `http://localhost:5000` para desarrollo.
+
+Para producción, actualiza `NEXT_PUBLIC_API_URL` con la URL de tu backend desplegado.
+
+## 📱 Páginas Implementadas
+
+- ✅ Login/Registro
+- ✅ Home (Dashboard)
+- ⏳ Chat (próximamente)
+- ⏳ Diario (próximamente)
+- ⏳ Calendario (próximamente)
+- ⏳ Meditación (próximamente)
+- ⏳ Psicólogos (próximamente)
+- ⏳ Consejos (próximamente)
+
+## 🎯 Próximos Pasos
+
+1. Implementar las páginas restantes
+2. Agregar animaciones con Framer Motion
+3. Implementar PWA para instalación
+4. Agregar notificaciones push
+5. Optimizar imágenes con Next/Image
