@@ -4,7 +4,17 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { emotionsAPI } from '@/lib/api';
+import { notesAPI } from '@/lib/api';
+import Navigation from '@/components/Navigation';
+
+interface Note {
+  id: string;
+  title: string;
+  content: string;
+  emotion_name: string;
+  emotion_emoji: string;
+  timestamp: string;
+}
 
 export default function CalendarPage() {
   const [user, setUser] = useState<any>(null);
@@ -26,10 +36,48 @@ export default function CalendarPage() {
 
   const loadEmotions = async () => {
     try {
-      const response = await emotionsAPI.getCalendar();
-      setEmotionsByDay(response.data);
+      const response = await notesAPI.getAll();
+      const notes: Note[] = response.data;
+
+      const emotionsMap: Record<string, string[]> = {};
+
+      notes.forEach(note => {
+        if (!note.timestamp || !note.emotion_emoji) return;
+
+        const date = new Date(note.timestamp);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const dateKey = `${year}-${month}-${day}`;
+
+        if (!emotionsMap[dateKey]) {
+          emotionsMap[dateKey] = [];
+        }
+        emotionsMap[dateKey].push(note.emotion_emoji);
+      });
+
+      const finalEmotions: Record<string, string> = {};
+
+      Object.keys(emotionsMap).forEach(dateKey => {
+        const emojis = emotionsMap[dateKey];
+        const counts: Record<string, number> = {};
+        let maxCount = 0;
+        let mostFrequentEmoji = emojis[0];
+
+        emojis.forEach(emoji => {
+          counts[emoji] = (counts[emoji] || 0) + 1;
+          if (counts[emoji] > maxCount) {
+            maxCount = counts[emoji];
+            mostFrequentEmoji = emoji;
+          }
+        });
+
+        finalEmotions[dateKey] = mostFrequentEmoji;
+      });
+
+      setEmotionsByDay(finalEmotions);
     } catch (error) {
-      console.error('Error loading calendar:', error);
+      console.error('Error loading calendar data:', error);
     }
   };
 
@@ -68,20 +116,8 @@ export default function CalendarPage() {
   const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="gradient-primary text-white shadow-lg">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <button
-            onClick={() => router.push('/home')}
-            className="flex items-center gap-2 hover:bg-white/20 px-3 py-2 rounded-lg transition"
-          >
-            <span>←</span>
-            <span>Volver</span>
-          </button>
-          <h1 className="text-xl font-bold">📅 Calendario de Emociones</h1>
-          <div></div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-zenith-light">
+      <Navigation user={user} />
 
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white rounded-2xl shadow-lg p-6 max-w-4xl mx-auto">
@@ -89,7 +125,7 @@ export default function CalendarPage() {
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={previousMonth}
-              className="gradient-primary text-white w-10 h-10 rounded-full flex items-center justify-center hover:opacity-90 transition"
+              className="bg-[#02B396] text-white w-10 h-10 rounded-full flex items-center justify-center hover:opacity-90 transition"
             >
               ←
             </button>
@@ -98,7 +134,7 @@ export default function CalendarPage() {
             </h2>
             <button
               onClick={nextMonth}
-              className="gradient-primary text-white w-10 h-10 rounded-full flex items-center justify-center hover:opacity-90 transition"
+              className="bg-[#02B396] text-white w-10 h-10 rounded-full flex items-center justify-center hover:opacity-90 transition"
             >
               →
             </button>
@@ -107,24 +143,24 @@ export default function CalendarPage() {
           {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-2">
             {dayNames.map(day => (
-              <div key={day} className="text-center font-semibold text-purple-600 py-2">
+              <div key={day} className="text-center font-semibold text-[#02B396] py-2">
                 {day}
               </div>
             ))}
-            
+
             {[...Array(startingDayOfWeek)].map((_, index) => (
               <div key={`empty-${index}`} className="aspect-square"></div>
             ))}
-            
+
             {[...Array(daysInMonth)].map((_, index) => {
               const day = index + 1;
               const dateKey = getDateKey(day);
               const emotion = emotionsByDay[dateKey];
-              
+
               return (
                 <div
                   key={day}
-                  className="aspect-square border-2 border-gray-200 rounded-xl flex flex-col items-center justify-center hover:border-purple-500 transition cursor-pointer"
+                  className="aspect-square border-2 border-gray-200 rounded-xl flex flex-col items-center justify-center hover:border-[#02B396] transition cursor-pointer"
                 >
                   <span className="text-sm text-gray-600">{day}</span>
                   {emotion && <span className="text-2xl mt-1">{emotion}</span>}
@@ -133,7 +169,7 @@ export default function CalendarPage() {
             })}
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }

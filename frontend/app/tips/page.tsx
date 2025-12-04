@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { tipsAPI } from '@/lib/api';
+import Navigation from '@/components/Navigation';
 
 interface Tip {
   texto: string;
@@ -38,20 +39,8 @@ export default function TipsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="gradient-primary text-white shadow-lg">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <button
-            onClick={() => router.push('/home')}
-            className="flex items-center gap-2 hover:bg-white/20 px-3 py-2 rounded-lg transition"
-          >
-            <span>←</span>
-            <span>Volver</span>
-          </button>
-          <h1 className="text-xl font-bold">💡 Consejos de Salud Mental</h1>
-          <div></div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-zenith-light">
+      <Navigation user={user} />
 
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

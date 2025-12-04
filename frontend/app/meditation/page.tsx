@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
+import Navigation from '@/components/Navigation';
+
 export default function MeditationPage() {
   const [user, setUser] = useState<any>(null);
   const [duration, setDuration] = useState('');
@@ -70,27 +72,15 @@ export default function MeditationPage() {
   };
 
   return (
-    <div className="min-h-screen gradient-primary">
-      <header className="bg-white/10 backdrop-blur-md text-white shadow-lg">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <button
-            onClick={() => router.push('/home')}
-            className="flex items-center gap-2 hover:bg-white/20 px-3 py-2 rounded-lg transition"
-          >
-            <span>←</span>
-            <span>Volver</span>
-          </button>
-          <h1 className="text-xl font-bold">🧘 Meditación</h1>
-          <div></div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-zenith-light">
+      <Navigation user={user} />
 
       <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-[calc(100vh-80px)]">
         <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full">
-          <h2 className="text-2xl font-bold text-center gradient-text mb-6">
+          <h2 className="text-2xl font-bold text-center text-zenith-dark mb-6">
             Ejercicio de Respiración
           </h2>
-          
+
           {!isActive ? (
             <div className="space-y-6">
               <div>
@@ -103,13 +93,13 @@ export default function MeditationPage() {
                   onChange={(e) => setDuration(e.target.value)}
                   placeholder="Ej: 60"
                   min="1"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#02B396] focus:outline-none transition"
                 />
               </div>
               <button
                 onClick={startMeditation}
                 disabled={!duration}
-                className="w-full gradient-primary text-white py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition disabled:opacity-50"
+                className="w-full bg-[#02B396] text-white py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition disabled:opacity-50"
               >
                 Comenzar
               </button>
@@ -117,14 +107,13 @@ export default function MeditationPage() {
           ) : (
             <div className="space-y-6">
               <div className="text-center">
-                <div className="text-5xl font-bold text-purple-600 mb-6">
+                <div className="text-5xl font-bold text-[#02B396] mb-6">
                   {formatTime(timeLeft)}
                 </div>
-                
+
                 <div className="flex items-center justify-center mb-6">
-                  <div className={`w-32 h-32 rounded-full gradient-primary transition-all duration-[5000ms] ${
-                    showInhale ? 'scale-150 opacity-80' : 'scale-100 opacity-100'
-                  }`}></div>
+                  <div className={`w-32 h-32 rounded-full bg-[#02B396] transition-all duration-[5000ms] ${showInhale ? 'scale-150 opacity-80' : 'scale-100 opacity-100'
+                    }`}></div>
                 </div>
 
                 <div className="text-3xl font-bold text-gray-800 mb-2">
@@ -145,19 +134,19 @@ export default function MeditationPage() {
             <h3 className="font-bold text-gray-800 mb-3">Consejos:</h3>
             <ul className="space-y-2 text-gray-600">
               <li className="flex items-start gap-2">
-                <span className="text-purple-600">✓</span>
+                <span className="text-[#02B396]">✓</span>
                 <span>Encuentra un lugar tranquilo</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-purple-600">✓</span>
+                <span className="text-[#02B396]">✓</span>
                 <span>Siéntate cómodamente</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-purple-600">✓</span>
+                <span className="text-[#02B396]">✓</span>
                 <span>Respira profundamente</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-purple-600">✓</span>
+                <span className="text-[#02B396]">✓</span>
                 <span>Concéntrate en tu respiración</span>
               </li>
             </ul>
