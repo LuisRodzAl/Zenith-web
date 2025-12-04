@@ -140,4 +140,21 @@
     backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, 0.9);
   }
+
+  /* Zenith Custom Colors */
+  .bg-zenith-teal {
+    background-color: #03CCAB;
+  }
+  .text-zenith-teal {
+    color: #03CCAB;
+  }
+  .bg-zenith-light {
+    background-color: #E1FAFA;
+  }
+  .bg-zenith-dark {
+    background-color: #30628C;
+  }
+  .border-zenith-teal {
+    border-color: #03CCAB;
+  }
 }

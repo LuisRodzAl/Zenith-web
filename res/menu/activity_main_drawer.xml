@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home_24dp_fill0_wght400_grad0_opsz24"
+            android:iconTint="@color/md_theme_onSurface_highContrast"
+            android:title="Inicio" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/auto_stories_24dp_fill0_wght400_grad0_opsz24"
+            android:iconTint="@color/md_theme_onSurface_highContrast"
+            android:title="Diario" />
+        <item
+            android:id="@+id/nav_Meditacion"
+            android:icon="@drawable/iconom"
+            android:iconTint="@color/md_theme_onSurface_highContrast"
+            android:title="Meditación" />
+
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/home_calendar"
+            android:title="Calendario de Emociones" />
+
+        <item
+        android:id="@+id/nav_directorio"
+        android:title="Directorio Psicólogos"
+            android:icon="@drawable/ic_directory"
+            />
+    </group>
+</menu>

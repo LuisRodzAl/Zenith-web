@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { notesAPI, emotionsAPI } from '@/lib/api';
+import Navigation from '@/components/Navigation';
 
 interface Emotion {
   name: string;
@@ -96,26 +97,16 @@ export default function DiaryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-zenith-light">
       {/* Header */}
-      <header className="gradient-primary text-white shadow-lg">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <button
-            onClick={() => router.push('/home')}
-            className="flex items-center gap-2 hover:bg-white/20 px-3 py-2 rounded-lg transition"
-          >
-            <span>←</span>
-            <span>Volver</span>
-          </button>
-          <h1 className="text-xl font-bold">📝 Mi Diario</h1>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition"
-          >
-            {showForm ? 'Cancelar' : '+ Nueva'}
-          </button>
-        </div>
-      </header>
+      <Navigation user={user}>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition font-medium"
+        >
+          {showForm ? 'Cancelar' : '+ Nueva'}
+        </button>
+      </Navigation>
 
       <div className="container mx-auto px-4 py-6">
         {/* Form */}
@@ -127,17 +118,17 @@ export default function DiaryPage() {
                 placeholder="Título"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#02B396] focus:outline-none transition"
                 required
               />
               <textarea
                 placeholder="¿Cómo te sientes hoy?"
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition min-h-[120px]"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#02B396] focus:outline-none transition min-h-[120px]"
                 required
               />
-              
+
               <div>
                 <p className="font-semibold mb-3">Selecciona tu emoción:</p>
                 <div className="grid grid-cols-4 md:grid-cols-7 gap-3">
@@ -146,11 +137,10 @@ export default function DiaryPage() {
                       key={index}
                       type="button"
                       onClick={() => selectEmotion(emotion)}
-                      className={`flex flex-col items-center p-3 rounded-xl border-2 transition ${
-                        formData.emotion_emoji === emotion.emoji
-                          ? 'border-purple-500 bg-purple-50'
-                          : 'border-gray-200 hover:border-purple-300'
-                      }`}
+                      className={`flex flex-col items-center p-3 rounded-xl border-2 transition ${formData.emotion_emoji === emotion.emoji
+                        ? 'border-[#02B396] bg-[#02B396]/10'
+                        : 'border-gray-200 hover:border-[#02B396]/50'
+                        }`}
                     >
                       <span className="text-3xl mb-1">{emotion.emoji}</span>
                       <span className="text-xs">{emotion.name}</span>
@@ -162,7 +152,7 @@ export default function DiaryPage() {
               <button
                 type="submit"
                 disabled={!formData.emotion_emoji}
-                className="w-full gradient-primary text-white py-3 rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-50"
+                className="w-full bg-[#02B396] text-white py-3 rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-50"
               >
                 Guardar Nota
               </button>

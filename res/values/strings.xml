@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Zenith</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="logo">logo</string>
+    <string name="default_web_client_id">1012451827243-6u28j1nh2psunp1mrusajkkseuvf093e.apps.googleusercontent.com</string>
+    <string name="title_activity_home">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Exit</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Calendar</string>
+    <string name="menu_slideshow">Diary</string>
+    <string name="menu_Directory">Directory</string>
+    <string name="menu_Meditacion">meditation</string>
+
+    <string name="txt_Nombre">Nombre del contacto</string>
+    <string name="txt_datos">Telefono</string>
+    <string name="btn_Guardar">Guardar</string>
+    <string name="btn_buscar">Buscar</string>
+
+
+    <string name="UID_USUARIO">ID</string>
+    <string name="Email_usuario">Email</string>
+    <string name="Fecha_y_Hora">Fecha y Hora</string>
+    <string name="Titulo">Titulo</string>
+    <string name="Descripcion">Descripcion</string>
+    <string name="Btn_Calendario">Calendario</string>
+    <string name="Fecha">00/00/0000</string>
+    <string name="Estado">No finalizado</string>
+
+
+</resources>
