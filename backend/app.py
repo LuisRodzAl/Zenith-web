@@ -43,6 +43,7 @@ CORS(
 )
 
 # Initialize Firebase
+firebase_init_error = None
 db = None
 try:
     if app.config["FIREBASE_CREDENTIALS"]:
@@ -97,10 +98,6 @@ try:
                     raise Exception("JSON Parse Error")
 
             cred = credentials.Certificate(cred_dict)
-            print(
-                "⚠ Warning: FIREBASE_CREDENTIALS is not a valid file path nor a valid JSON string."
-            )
-            raise Exception("Invalid FIREBASE_CREDENTIALS format")
 
         firebase_admin.initialize_app(cred)
         db = firestore.client()
@@ -109,6 +106,7 @@ try:
             "⚠ Warning: FIREBASE_CREDENTIALS not set. Firebase features will be disabled."
         )
 except Exception as e:
+    firebase_init_error = str(e)
     print(f"⚠ Warning: Could not initialize Firebase: {e}")
     print("Firebase features will be disabled.")
 
@@ -140,10 +138,12 @@ def verify_token(token):
 
 def check_firebase():
     if not db:
+        error_msg = "Firebase not configured."
+        if firebase_init_error:
+            error_msg += f" Init Error: {firebase_init_error}"
+
         return jsonify(
-            {
-                "error": "Firebase not configured. Please set FIREBASE_CREDENTIALS in .env"
-            }
+            {"error": error_msg, "hint": "Check FIREBASE_CREDENTIALS in .env"}
         ), 503
     return None
 
@@ -158,6 +158,8 @@ def debug_firebase():
         "file_exists": False,
         "starts_with_brace": False,
         "is_valid_json": False,
+        "db_initialized": db is not None,
+        "init_error": firebase_init_error,
         "error": None,
     }
 
