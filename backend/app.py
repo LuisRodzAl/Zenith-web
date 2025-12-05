@@ -11,11 +11,10 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 app.config.from_object(Config)
 # Configuración de CORS para permitir solicitudes desde el frontend de Next.js
+# Configuración de CORS
 CORS(
     app,
-    origins=[
-        "http://localhost:5173"  # Origen del frontend en desarrollo
-    ],
+    origins=app.config["CORS_ORIGINS"],
     supports_credentials=True,
 )
 
@@ -34,6 +33,10 @@ try:
             import json
 
             try:
+                # Fix common Vercel env var issue where escaped newlines become literal \\n
+                if "\\n" in cred_val:
+                    cred_val = cred_val.replace("\\n", "\n")
+
                 cred_dict = json.loads(cred_val)
                 cred = credentials.Certificate(cred_dict)
                 print("✓ Firebase initialized from JSON environment variable")
@@ -249,7 +252,10 @@ def get_notes():
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        user_email = user["email"]
+        user_email = user.get("email")
+        if not user_email:
+            return jsonify({"error": "User email not found in token"}), 400
+
         print(f"📝 Getting notes for user: {user_email}")
 
         # Obtener notas sin order_by para evitar necesidad de índice
