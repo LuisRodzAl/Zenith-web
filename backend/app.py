@@ -116,6 +116,42 @@ def check_firebase():
     return None
 
 
+@app.route("/api/debug-firebase", methods=["GET"])
+def debug_firebase():
+    cred_val = app.config.get("FIREBASE_CREDENTIALS")
+    status = {
+        "has_credentials": bool(cred_val),
+        "credentials_length": len(cred_val) if cred_val else 0,
+        "is_file_path": False,
+        "file_exists": False,
+        "starts_with_brace": False,
+        "is_valid_json": False,
+        "error": None,
+    }
+
+    if cred_val:
+        status["is_file_path"] = cred_val.endswith(".json")
+        if status["is_file_path"]:
+            status["file_exists"] = os.path.exists(cred_val)
+        else:
+            status["starts_with_brace"] = cred_val.strip().startswith("{")
+            import json
+
+            try:
+                # Test parsing logic exactly as in init
+                test_val = cred_val
+                if "\\n" in test_val:
+                    test_val = test_val.replace("\\n", "\n")
+                json.loads(test_val)
+                status["is_valid_json"] = True
+            except Exception as e:
+                status["error"] = str(e)
+                # Show safe snippet of what was received
+                status["received_snippet"] = cred_val[:20] + "..." if cred_val else None
+
+    return jsonify(status)
+
+
 @app.route("/api/health", methods=["GET"])
 def health_check():
     return jsonify({"status": "ok", "message": "Zenith API is running"})
