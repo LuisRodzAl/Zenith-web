@@ -57,13 +57,20 @@ try:
             import json
 
             try:
-                # 1. First attempt: Standard parse
-                # Fix common Vercel env var issue where escaped newlines become literal \\n
-                if "\\n" in cred_val:
-                    cred_val = cred_val.replace("\\n", "\n")
-
-                cred_dict = json.loads(cred_val, strict=False)
-                print("✓ Firebase initialized (standard parse)")
+                # 1. First attempt: Standard parse (try raw string first)
+                try:
+                    cred_dict = json.loads(cred_val, strict=False)
+                    print("✓ Firebase initialized (standard parse)")
+                except json.JSONDecodeError:
+                    # Common Vercel env var issue where escaped newlines become literal \\n
+                    # Only try this if standard parse FAILED
+                    if "\\n" in cred_val:
+                        print("⚠ Standard parse failed, attempting newline fix...")
+                        cred_val_fixed = cred_val.replace("\\n", "\n")
+                        cred_dict = json.loads(cred_val_fixed, strict=False)
+                        print("✓ Firebase initialized (newline fix applied)")
+                    else:
+                        raise
             except json.JSONDecodeError:
                 # 2. Second attempt: Aggressive cleanup
                 print("⚠ Standard parse failed, attempting aggressive cleanup...")
@@ -162,15 +169,23 @@ def debug_firebase():
             status["starts_with_brace"] = cred_val.strip().startswith("{")
             import json
 
+            # Try raw load first - the most standard case
             try:
-                # Test parsing logic exactly as in init
-                test_val = cred_val
-                if "\\n" in test_val:
-                    test_val = test_val.replace("\\n", "\n")
-                json.loads(test_val)
+                json.loads(cred_val)
                 status["is_valid_json"] = True
-            except Exception as e:
-                status["error"] = str(e)
+            except json.JSONDecodeError:
+                # If that fails, maybe it has escaped newlines that need fixing (Vercel specific)
+                try:
+                    test_val = cred_val
+                    if "\\n" in test_val:
+                        test_val = test_val.replace("\\n", "\n")
+                    json.loads(test_val)
+                    status["is_valid_json"] = True
+                    status["error"] = (
+                        "Standard parse failed, but modified parse worked (newlines replaced)"
+                    )
+                except Exception as e:
+                    status["error"] = str(e)
                 # Show safe snippet of what was received
                 status["received_snippet"] = cred_val[:20] + "..." if cred_val else None
 
