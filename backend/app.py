@@ -4,8 +4,16 @@ import os
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 import google.generativeai as genai
-from config import Config
-from models import Emotion, Note, ChatMessage, Psicologo, Consejo
+
+try:
+    from config import Config
+except ImportError:
+    from backend.config import Config
+
+try:
+    from models import Emotion, Note, ChatMessage, Psicologo, Consejo
+except ImportError:
+    from backend.models import Emotion, Note, ChatMessage, Psicologo, Consejo
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
