@@ -1,14 +1,30 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import sys
 import os
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 import google.generativeai as genai
 
+# Add backend directory to sys.path to allow imports in Vercel
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+
+# Also try adding the parent directory if we are inside 'backend'
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
 try:
     from config import Config
 except ImportError:
-    from backend.config import Config
+    try:
+        from backend.config import Config
+    except ImportError:
+        # Last resort: try adding explicit path relative to task root
+        sys.path.append("/var/task/backend")
+        from config import Config
 
 try:
     from models import Emotion, Note, ChatMessage, Psicologo, Consejo
