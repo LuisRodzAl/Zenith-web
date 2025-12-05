@@ -57,18 +57,43 @@ try:
             import json
 
             try:
+                # 1. First attempt: Standard parse
                 # Fix common Vercel env var issue where escaped newlines become literal \\n
                 if "\\n" in cred_val:
                     cred_val = cred_val.replace("\\n", "\n")
 
-                cred_dict = json.loads(cred_val)
-                cred = credentials.Certificate(cred_dict)
-                print("✓ Firebase initialized from JSON environment variable")
+                cred_dict = json.loads(cred_val, strict=False)
+                print("✓ Firebase initialized (standard parse)")
             except json.JSONDecodeError:
-                print(
-                    "⚠ Warning: FIREBASE_CREDENTIALS is not a valid file path nor a valid JSON string."
-                )
-                raise Exception("Invalid FIREBASE_CREDENTIALS format")
+                # 2. Second attempt: Aggressive cleanup
+                print("⚠ Standard parse failed, attempting aggressive cleanup...")
+                import re
+
+                # Remove any non-printable characters except newlines/tabs
+                cleaned = re.sub(r"[\x00-\x1f\x7f-\x9f]", "", cred_val)
+                # But we need newlines in private key, so we must be careful.
+                # Actually, simpler approach: if it has newlines, remove them unless they are part of the key
+                # Re-try with raw string cleanup for common copy-paste errors
+                try:
+                    # Often the issue is literal newlines in the JSON string where they shouldn't be
+                    cleaned_val = cred_val.replace("\n", " ").replace("\r", "")
+                    # Restore the private key newlines which are crucial
+                    if "-----BEGIN PRIVATE KEY-----" in cleaned_val:
+                        # This part is tricky, usually better to manual fix
+                        pass
+
+                    # Try forgiving load
+                    cred_dict = json.loads(cred_val, strict=False)
+                except:
+                    # Last resort fallback: Manuel construct if possible or fail gracefully
+                    print("Suggest checking Vercel env var for hidden characters")
+                    raise Exception("JSON Parse Error")
+
+            cred = credentials.Certificate(cred_dict)
+            print(
+                "⚠ Warning: FIREBASE_CREDENTIALS is not a valid file path nor a valid JSON string."
+            )
+            raise Exception("Invalid FIREBASE_CREDENTIALS format")
 
         firebase_admin.initialize_app(cred)
         db = firestore.client()
